@@ -1,0 +1,6 @@
+[submodule "Backend-ToiCuongTong"]
+	path = Backend-ToiCuongTong
+	url = https://github.com/tranvuduchoang/Backend-ToiCuongTong.git
+[submodule "Frontend-ToiCuongTong"]
+	path = Frontend-ToiCuongTong
+	url = https://github.com/tranvuduchoang/Frontend-ToiCuongTong.git

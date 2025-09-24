@@ -32,7 +32,8 @@ export default function WelcomePage() {
       }
     } catch (error) {
       console.error(error);
-      // Xử lý lỗi, ví dụ: logout người dùng nếu token hỏng
+      // Nếu lỗi 404 hoặc không tìm thấy Player, vẫn chuyển đến trang tạo nhân vật
+      router.push('/create-character');
     }
   };
 

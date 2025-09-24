@@ -1,0 +1,280 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --font-size: 16px;
+  
+  /* Kiếm Hiệp Theme Colors */
+  --imperial-gold: #ffd700;
+  --deep-crimson: #8b0000;
+  --jade-green: #00a86b;
+  --mystic-purple: #4b0082;
+  --bronze-brown: #cd7f32;
+  --shadow-black: #1a1a1a;
+  --ancient-ivory: #f5f5dc;
+  --mountain-mist: #708090;
+  
+  --background: linear-gradient(135deg, #1e1e2e 0%, #2d1b69 50%, #1a1a1a 100%);
+  --foreground: var(--ancient-ivory);
+  --card: rgba(26, 26, 26, 0.95);
+  --card-foreground: var(--ancient-ivory);
+  --popover: rgba(26, 26, 26, 0.98);
+  --popover-foreground: var(--ancient-ivory);
+  --primary: var(--imperial-gold);
+  --primary-foreground: var(--shadow-black);
+  --secondary: rgba(75, 0, 130, 0.8);
+  --secondary-foreground: var(--ancient-ivory);
+  --muted: rgba(112, 128, 144, 0.3);
+  --muted-foreground: var(--mountain-mist);
+  --accent: var(--jade-green);
+  --accent-foreground: var(--ancient-ivory);
+  --destructive: var(--deep-crimson);
+  --destructive-foreground: var(--ancient-ivory);
+  --border: rgba(255, 215, 0, 0.3);
+  --input: rgba(26, 26, 26, 0.8);
+  --input-background: rgba(26, 26, 26, 0.6);
+  --switch-background: var(--bronze-brown);
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --ring: var(--imperial-gold);
+  --chart-1: var(--imperial-gold);
+  --chart-2: var(--jade-green);
+  --chart-3: var(--mystic-purple);
+  --chart-4: var(--deep-crimson);
+  --chart-5: var(--bronze-brown);
+  --radius: 0.625rem;
+  --sidebar: rgba(26, 26, 26, 0.9);
+  --sidebar-foreground: var(--ancient-ivory);
+  --sidebar-primary: var(--imperial-gold);
+  --sidebar-primary-foreground: var(--shadow-black);
+  --sidebar-accent: rgba(75, 0, 130, 0.5);
+  --sidebar-accent-foreground: var(--ancient-ivory);
+  --sidebar-border: rgba(255, 215, 0, 0.2);
+  --sidebar-ring: var(--imperial-gold);
+}
+
+.dark {
+  --background: linear-gradient(135deg, #0f0f1e 0%, #1a0d3a 50%, #0a0a0a 100%);
+  --foreground: var(--ancient-ivory);
+  --card: rgba(15, 15, 30, 0.95);
+  --card-foreground: var(--ancient-ivory);
+  --popover: rgba(15, 15, 30, 0.98);
+  --popover-foreground: var(--ancient-ivory);
+  --primary: var(--imperial-gold);
+  --primary-foreground: var(--shadow-black);
+  --secondary: rgba(75, 0, 130, 0.9);
+  --secondary-foreground: var(--ancient-ivory);
+  --muted: rgba(112, 128, 144, 0.4);
+  --muted-foreground: var(--mountain-mist);
+  --accent: var(--jade-green);
+  --accent-foreground: var(--ancient-ivory);
+  --destructive: var(--deep-crimson);
+  --destructive-foreground: var(--ancient-ivory);
+  --border: rgba(255, 215, 0, 0.4);
+  --input: rgba(15, 15, 30, 0.8);
+  --ring: var(--imperial-gold);
+  --font-weight-medium: 500;
+  --font-weight-normal: 400;
+  --chart-1: var(--imperial-gold);
+  --chart-2: var(--jade-green);
+  --chart-3: var(--mystic-purple);
+  --chart-4: var(--deep-crimson);
+  --chart-5: var(--bronze-brown);
+  --sidebar: rgba(15, 15, 30, 0.9);
+  --sidebar-foreground: var(--ancient-ivory);
+  --sidebar-primary: var(--imperial-gold);
+  --sidebar-primary-foreground: var(--shadow-black);
+  --sidebar-accent: rgba(75, 0, 130, 0.6);
+  --sidebar-accent-foreground: var(--ancient-ivory);
+  --sidebar-border: rgba(255, 215, 0, 0.3);
+  --sidebar-ring: var(--imperial-gold);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-input-background: var(--input-background);
+  --color-switch-background: var(--switch-background);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/**
+ * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
+ */
+@layer base {
+  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) {
+    h1 {
+      font-size: var(--text-2xl);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h2 {
+      font-size: var(--text-xl);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h3 {
+      font-size: var(--text-lg);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    h4 {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    p {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+
+    label {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    button {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-medium);
+      line-height: 1.5;
+    }
+
+    input {
+      font-size: var(--text-base);
+      font-weight: var(--font-weight-normal);
+      line-height: 1.5;
+    }
+  }
+}
+
+html {
+  font-size: var(--font-size);
+}
+
+/* Custom Martial Arts Theme Styles */
+.martial-glow {
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+}
+
+.power-pulse {
+  animation: powerPulse 2s ease-in-out infinite;
+}
+
+.sect-border {
+  border: 2px solid;
+  border-image: linear-gradient(45deg, var(--imperial-gold), var(--jade-green), var(--imperial-gold)) 1;
+}
+
+.cultivation-bg {
+  background: radial-gradient(circle at center, rgba(75, 0, 130, 0.3) 0%, rgba(26, 26, 26, 0.8) 70%);
+}
+
+.ancient-scroll {
+  background: linear-gradient(135deg, rgba(245, 245, 220, 0.1) 0%, rgba(205, 127, 50, 0.1) 100%);
+  border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.map-theme-forest {
+  background: linear-gradient(135deg, rgba(0, 100, 0, 0.3) 0%, rgba(34, 139, 34, 0.2) 100%);
+  border: 2px solid rgba(0, 168, 107, 0.5);
+}
+
+.map-theme-swamp {
+  background: linear-gradient(135deg, rgba(85, 107, 47, 0.3) 0%, rgba(47, 79, 79, 0.2) 100%);
+  border: 2px solid rgba(105, 105, 105, 0.5);
+}
+
+.map-theme-ancient {
+  background: linear-gradient(135deg, rgba(139, 69, 19, 0.3) 0%, rgba(160, 82, 45, 0.2) 100%);
+  border: 2px solid rgba(205, 127, 50, 0.5);
+}
+
+.floating-animation {
+  animation: floating 3s ease-in-out infinite;
+}
+
+@keyframes powerPulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), 0 0 50px rgba(255, 215, 0, 0.4);
+  }
+}
+
+@keyframes floating {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.qi-flow {
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    rgba(255, 215, 0, 0.3) 25%, 
+    rgba(0, 168, 107, 0.3) 50%, 
+    rgba(75, 0, 130, 0.3) 75%, 
+    transparent 100%);
+  background-size: 200% 100%;
+  animation: qiFlow 3s linear infinite;
+}
+
+@keyframes qiFlow {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}

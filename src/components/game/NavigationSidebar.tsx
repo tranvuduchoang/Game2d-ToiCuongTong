@@ -39,7 +39,7 @@ const navigationItems = [
 
 export function NavigationSidebar({ activeSection, onSectionChange }: NavigationSidebarProps) {
   return (
-    <Card className="h-full sect-border ancient-scroll relative overflow-hidden">
+    <Card className="h-full sect-border ancient-scroll relative overflow-y-auto">
       <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-accent/5" />
       <div className="p-4 relative z-10">
         <h3 className="text-lg mb-4 text-primary font-bold tracking-wider border-b border-primary/30 pb-2 martial-glow">

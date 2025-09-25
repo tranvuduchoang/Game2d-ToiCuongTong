@@ -82,3 +82,15 @@ export const createCharacter = async (data: any) => {
     }
     return response.json();
 };
+
+// API lấy thông tin chi tiết nhân vật
+export const getPlayerData = async () => {
+    const response = await fetch(`${API_BASE_URL}/player/data`, {
+        headers: { 'Authorization': `Bearer ${getToken()}` }
+    });
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Không thể lấy thông tin nhân vật');
+    }
+    return response.json();
+};

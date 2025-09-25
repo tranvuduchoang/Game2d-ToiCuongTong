@@ -22,7 +22,7 @@ import {
   Bug,
   Bell
 } from 'lucide-react';
-import { api } from '../../lib/api';
+import { api, performCombatAction, getCombatState, endCombat } from '../../lib/api';
 import { MonsterDetails } from './MonsterDetails';
 import { CombatResult } from './CombatResult';
 import { CombatInventory } from './CombatInventory';
@@ -99,7 +99,29 @@ interface CombatAction {
   message: string;
 }
 
-export function CombatSystemComplete() {
+interface MonsterData {
+  id: number;
+  name: string;
+  level: number;
+  hp: number;
+  maxHp: number;
+  stats: Record<string, number>;
+  image?: string;
+}
+
+interface CombatSystemCompleteProps {
+  monsterData?: MonsterData;
+  combatId?: string | null;
+  onCombatEnd?: (result: 'victory' | 'defeat' | 'retreat') => void;
+  onBackToMap?: () => void;
+}
+
+export function CombatSystemComplete({ 
+  monsterData, 
+  combatId,
+  onCombatEnd, 
+  onBackToMap 
+}: CombatSystemCompleteProps = {}) {
   // State management
   const [combatState, setCombatState] = useState<CombatState | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -120,6 +142,7 @@ export function CombatSystemComplete() {
   const [selectedSkill, setSelectedSkill] = useState<CombatSkill | null>(null);
   const [selectedItem, setSelectedItem] = useState<CombatItem | null>(null);
   const [combatResult, setCombatResult] = useState<any>(null);
+  const [currentCombatId, setCurrentCombatId] = useState<string | null>(null);
 
   // Notifications
   const {
@@ -268,9 +291,84 @@ export function CombatSystemComplete() {
   // Initialize combat state
   useEffect(() => {
     if (!combatState) {
-      setCombatState(mockCombatState);
+      if (monsterData) {
+        // Use monster data from props
+        const combatStateWithMonster = {
+          ...mockCombatState,
+          monster: {
+            id: monsterData.id,
+            name: monsterData.name,
+            currentHp: monsterData.hp,
+            maxHp: monsterData.maxHp,
+            currentMana: 50,
+            maxMana: 50,
+            level: monsterData.level,
+            stats: monsterData.stats,
+            skills: [],
+            items: [],
+            experience: 0 // Add missing property
+          }
+        };
+        setCombatState(combatStateWithMonster);
+      } else {
+        setCombatState(mockCombatState);
+      }
     }
-  }, [combatState]);
+  }, [combatState, monsterData]);
+
+  // Set combat ID from props
+  useEffect(() => {
+    if (combatId) {
+      setCurrentCombatId(combatId);
+    }
+  }, [combatId]);
+
+  // Handle monster turn
+  useEffect(() => {
+    if (combatState && combatState.phase === 'monster_turn' && combatState.currentTurn === 'monster') {
+      const timer = setTimeout(() => {
+        // Monster attacks player
+        const monsterDamage = Math.floor(Math.random() * 20) + 10; // Random damage 10-30
+        const newState = { ...combatState };
+        newState.player.currentHp = Math.max(0, newState.player.currentHp - monsterDamage);
+        newState.messages.push(`${newState.monster.name} tấn công ${newState.player.name} gây ${monsterDamage} sát thương!`);
+        newState.turnNumber++;
+        
+        if (newState.player.currentHp <= 0) {
+          // Player defeated
+          newState.phase = 'defeat';
+          newState.isActive = false;
+          setCombatResult({
+            victory: false,
+            experience: 0,
+            gold: 0,
+            items: [],
+            damageDealt: 0,
+            damageTaken: monsterDamage,
+            turns: newState.turnNumber,
+            skillsUsed: 0
+          });
+          addDefeatNotification();
+          setShowCombatResult(true);
+          // Try to end combat with API
+          if (currentCombatId) {
+            endCombat(currentCombatId, 'defeat').catch(error => {
+              console.warn('Failed to end combat via API:', error);
+            });
+          }
+          onCombatEnd?.('defeat');
+        } else {
+          // Continue to player turn
+          newState.currentTurn = 'player';
+          newState.phase = 'action_selection';
+        }
+        
+        setCombatState(newState);
+      }, 1500); // 1.5 second delay for monster turn
+      
+      return () => clearTimeout(timer);
+    }
+  }, [combatState, addDefeatNotification, onCombatEnd]);
 
   // Combat logic
   const performAction = useCallback(async (action: CombatAction) => {
@@ -278,7 +376,19 @@ export function CombatSystemComplete() {
 
     setIsLoading(true);
     try {
-      // Simulate API call
+      // Try to use real API if combat ID is available
+      if (currentCombatId) {
+        try {
+          const result = await performCombatAction(currentCombatId, action);
+          // Update combat state with API response
+          setCombatState(result);
+          return;
+        } catch (apiError) {
+          console.warn('Combat API not available, using mock logic:', apiError);
+        }
+      }
+      
+      // Fallback to mock logic
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       // Process action
@@ -304,6 +414,14 @@ export function CombatSystemComplete() {
             skillsUsed: 0
           });
           addVictoryNotification(100, 50);
+          setShowCombatResult(true);
+          // Try to end combat with API
+          if (currentCombatId) {
+            endCombat(currentCombatId, 'victory').catch(error => {
+              console.warn('Failed to end combat via API:', error);
+            });
+          }
+          onCombatEnd?.('victory');
         } else {
           newState.currentTurn = 'monster';
           newState.phase = 'monster_turn';
@@ -331,6 +449,14 @@ export function CombatSystemComplete() {
               skillsUsed: 1
             });
             addVictoryNotification(100, 50);
+            setShowCombatResult(true);
+            // Try to end combat with API
+            if (currentCombatId) {
+              endCombat(currentCombatId, 'victory').catch(error => {
+                console.warn('Failed to end combat via API:', error);
+              });
+            }
+            onCombatEnd?.('victory');
           } else {
             newState.currentTurn = 'monster';
             newState.phase = 'monster_turn';
@@ -406,6 +532,37 @@ export function CombatSystemComplete() {
     performAction(action);
   };
 
+  const handleRetreat = () => {
+    if (!combatState) return;
+    
+    const newState = { ...combatState };
+    newState.phase = 'defeat'; // Use defeat phase for retreat
+    newState.isActive = false;
+    newState.messages.push(`${combatState.player.name} rút lui khỏi trận chiến!`);
+    
+    setCombatState(newState);
+    setCombatResult({
+      victory: false,
+      experience: 0,
+      gold: 0,
+      items: [],
+      damageDealt: 0,
+      damageTaken: 0,
+      turns: newState.turnNumber,
+      skillsUsed: 0,
+      retreated: true
+    });
+    
+    setShowCombatResult(true);
+    // Try to end combat with API
+    if (currentCombatId) {
+      endCombat(currentCombatId, 'retreat').catch(error => {
+        console.warn('Failed to end combat via API:', error);
+      });
+    }
+    onCombatEnd?.('retreat');
+  };
+
   const handleDefend = () => {
     if (!combatState) return;
     
@@ -451,7 +608,7 @@ export function CombatSystemComplete() {
           result={combatResult}
           onContinue={handleContinue}
           onRetry={handleRetry}
-          onBackToMap={() => setCombatState(null)}
+          onBackToMap={onBackToMap || (() => setCombatState(null))}
         />
       </div>
     );
@@ -859,6 +1016,10 @@ export function CombatSystemComplete() {
               <Button onClick={handleDefend} variant="outline" className="flex-1" disabled={isLoading}>
                 <Shield className="w-4 h-4 mr-2" />
                 Phòng thủ
+              </Button>
+              <Button onClick={handleRetreat} variant="destructive" className="flex-1" disabled={isLoading}>
+                <X className="w-4 h-4 mr-2" />
+                Rút lui
               </Button>
             </div>
 

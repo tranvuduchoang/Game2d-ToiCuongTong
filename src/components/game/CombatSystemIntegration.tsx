@@ -26,11 +26,31 @@ import {
 import { CombatSystemComplete } from './CombatSystemComplete';
 import { CombatSystemDemo } from './CombatSystemDemo';
 
-interface CombatSystemIntegrationProps {
-  onClose?: () => void;
+interface MonsterData {
+  id: number;
+  name: string;
+  level: number;
+  hp: number;
+  maxHp: number;
+  stats: Record<string, number>;
+  image?: string;
 }
 
-export function CombatSystemIntegration({ onClose }: CombatSystemIntegrationProps) {
+interface CombatSystemIntegrationProps {
+  onClose?: () => void;
+  monsterData?: MonsterData;
+  combatId?: string | null;
+  onCombatEnd?: (result: 'victory' | 'defeat' | 'retreat') => void;
+  onBackToMap?: () => void;
+}
+
+export function CombatSystemIntegration({ 
+  onClose, 
+  monsterData, 
+  combatId,
+  onCombatEnd, 
+  onBackToMap 
+}: CombatSystemIntegrationProps) {
   const [activeTab, setActiveTab] = useState<'demo' | 'combat' | 'settings' | 'help' | 'stats' | 'log' | 'debug'>('demo');
   const [showCombat, setShowCombat] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -38,6 +58,14 @@ export function CombatSystemIntegration({ onClose }: CombatSystemIntegrationProp
   const [showStats, setShowStats] = useState(false);
   const [showLog, setShowLog] = useState(false);
   const [showDebug, setShowDebug] = useState(false);
+
+  // Auto-start combat if monsterData is provided
+  useEffect(() => {
+    if (monsterData) {
+      setActiveTab('combat');
+      setShowCombat(true);
+    }
+  }, [monsterData]);
 
   const handleStartCombat = () => {
     setActiveTab('combat');
@@ -95,7 +123,14 @@ export function CombatSystemIntegration({ onClose }: CombatSystemIntegrationProp
         );
       
       case 'combat':
-        return <CombatSystemComplete />;
+        return (
+          <CombatSystemComplete 
+            monsterData={monsterData}
+            combatId={combatId}
+            onCombatEnd={onCombatEnd}
+            onBackToMap={onBackToMap}
+          />
+        );
       
       case 'settings':
         return (

@@ -3,6 +3,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import { AuthProvider } from '@/lib/auth';
+import { PlayerProvider } from '@/contexts/PlayerContext';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 
@@ -22,11 +23,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} bg-gray-900 text-white`}>
         <AuthProvider>
-          <Header />
-          <main className="min-h-screen pt-16">
-            {children}
-          </main>
-          <Footer />
+          <PlayerProvider>
+            <Header />
+            <main className="min-h-screen pt-16">
+              {children}
+            </main>
+            <Footer />
+          </PlayerProvider>
         </AuthProvider>
       </body>
     </html>

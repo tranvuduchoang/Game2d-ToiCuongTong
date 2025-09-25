@@ -94,3 +94,46 @@ export const getPlayerData = async () => {
     }
     return response.json();
 };
+
+// API object for easy access
+export const api = {
+    get: async (url: string) => {
+        const response = await fetch(`${API_BASE_URL}${url}`, {
+            headers: { 'Authorization': `Bearer ${getToken()}` }
+        });
+        if (!response.ok) throw new Error('Request failed');
+        return response.json();
+    },
+    post: async (url: string, data: any) => {
+        const response = await fetch(`${API_BASE_URL}${url}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getToken()}`
+            },
+            body: JSON.stringify(data)
+        });
+        if (!response.ok) throw new Error('Request failed');
+        return response.json();
+    },
+    put: async (url: string, data: any) => {
+        const response = await fetch(`${API_BASE_URL}${url}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${getToken()}`
+            },
+            body: JSON.stringify(data)
+        });
+        if (!response.ok) throw new Error('Request failed');
+        return response.json();
+    },
+    delete: async (url: string) => {
+        const response = await fetch(`${API_BASE_URL}${url}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${getToken()}` }
+        });
+        if (!response.ok) throw new Error('Request failed');
+        return response.json();
+    }
+};

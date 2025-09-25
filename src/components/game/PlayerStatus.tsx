@@ -24,15 +24,16 @@ export function PlayerStatus({}: PlayerStatusProps) {
         
         // Chuyển đổi dữ liệu từ backend thành format cho UI
         const statusData: PlayerStatusData = {
-          playerName: data.name || "mockData",
-          cultivationLevel: "mockData", // Có thể lấy từ stats hoặc tính toán
-          cultivationRealm: "mockData", // Có thể lấy từ stats hoặc tính toán
-          physicalStrength: Math.min(data.stats?.STR ? data.stats.STR * 5 : 75, 100), // Giới hạn tối đa 100
-          maxPhysicalStrength: 100,
-          experience: data.stats?.EXP || "mockData", // Lấy từ stats nếu có
-          maxExperience: 2000,
-          spiritStones: data.stats?.SPIRIT_STONES || "mockData", // Lấy từ stats nếu có
-          reputation: data.stats?.REPUTATION || "mockData" // Lấy từ stats nếu có
+          playerName: data.name || "Chưa đặt tên", //tên nhân vật và người chơi đã đặt khi tạo tài khoản
+          cultivationLevel: data.cultivationLevel || "Luyện Thể", // Tu vi của người chơi (Luyện thể - Luyện khí - Trúc cơ - Kết đan - Nguyên anh - Hóa thần)
+          cultivationRealm: data.cultivationRealm || "Tầng 1", // Bậc trong tu vi người chơi (1-9) . Ví dụ một tài khoản mới tạo sẽ có tu vi luyện thể tầng 1
+          physicalStrength: Math.min(data.currentStamina || 100, data.maxStamina || 100), // luôn phải <= maxPhysicalStrength và sẽ bị trừ đi khi tham gia "Khám phá" map và sẽ được hồi theo thời gian
+          maxPhysicalStrength: data.maxStamina || 100, // Giới hạn tối đa 100, sẽ tăng thêm 10 khi tăng 1 tầng nhỏ, thăng thêm 50 khi tăng 1 cảnh giới
+          experience: data.experience || 0, // Kinh nghiệm tu luyện của người chơi. Với tài khoản mới tạo thì sẽ là 0
+          maxExperience: data.maxExperience || 2000, // Kinh nghiệm tu luyện tối đa của người chơi với tu vi đang luyện
+          spiritStones: data.spiritStones || 0, // Linh thạch của người chơi. Với tài khoản mới tạo thì sẽ là 0. Phải nạp tiền mới có hoặc tham gia sự kiện để được tặng
+          gold: data.gold || 0, // Vàng của người chơi. Với tài khoản mới tạo thì sẽ là 0. Có thể đánh quái vật, khám phá map, tham gia sự kiện để được tặng
+          reputation: data.reputation || 0 // Danh tiếng của người chơi. Với tài khoản mới tạo thì sẽ là 0
         };
         
         setPlayerData(statusData);
@@ -126,6 +127,13 @@ export function PlayerStatus({}: PlayerStatusProps) {
             <span className="text-sm text-muted-foreground">Linh Thạch</span>
           </div>
           <span className="text-primary font-semibold">{playerData.spiritStones.toLocaleString()}</span>
+        </div>
+        <div className="flex justify-between items-center mt-4 pt-4 border-t border-border">
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 bg-primary rounded-full martial-glow floating-animation"></div>
+            <span className="text-sm text-muted-foreground">Vàng</span>
+          </div>
+          <span className="text-primary font-semibold">{playerData.gold.toLocaleString()}</span>
         </div>
       </CardContent>
     </Card>

@@ -12,6 +12,18 @@ export interface PlayerData {
     [key: string]: any;
   };
   userId: number; // Thay vì có toàn bộ user object
+  // Thêm các trường mới từ database
+  currentRealmId?: number;
+  currentSublevel?: number;
+  experience?: number;
+  maxExperience?: number;
+  spiritStones?: number;
+  gold?: number;
+  reputation?: number;
+  currentStamina?: number;
+  maxStamina?: number;
+  cultivationLevel?: string;
+  cultivationRealm?: string;
 }
 
 export interface PlayerStatusData {
@@ -23,5 +35,6 @@ export interface PlayerStatusData {
   experience: number;
   maxExperience: number;
   spiritStones: number;
+  gold: number;
   reputation: number;
 }

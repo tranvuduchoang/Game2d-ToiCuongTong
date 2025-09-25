@@ -1,9 +1,11 @@
 import { MapExploration } from "./MapExploration";
+import { MapExplorationWithCombat } from "./MapExplorationWithCombat";
 import { SectManagement } from "./SectManagement";
 import { PlayerDetails } from "./PlayerDetails";
 import { EquipmentInventory } from "./EquipmentInventory";
 import { TechniquesSkills } from "./TechniquesSkills";
 import { DiscipleDetails } from "./DiscipleDetails";
+import { CombatSystemIntegration } from "./CombatSystemIntegration";
 import { Card, CardContent } from "./ui/card";
 import { Construction, Users, Sword, Mountain, BookOpen, Flame, Gem, Calendar, Trophy, Settings, User, Package } from "lucide-react";
 
@@ -15,7 +17,7 @@ export function GameContent({ activeSection }: GameContentProps) {
   const renderContent = () => {
     switch (activeSection) {
       case "map":
-        return <MapExploration />;
+        return <MapExplorationWithCombat />;
       
       case "player":
         return <PlayerDetails />;
@@ -47,18 +49,7 @@ export function GameContent({ activeSection }: GameContentProps) {
         );
       
       case "combat":
-        return (
-          <Card className="h-full">
-            <CardContent className="p-6 flex items-center justify-center">
-              <div className="text-center">
-                <Sword className="w-16 h-16 mx-auto mb-4 text-slate-400" />
-                <h3 className="text-xl mb-2">Chiến Đấu</h3>
-                <p className="text-slate-600">Đấu võ đài và chiến đấu theo lượt</p>
-                <p className="text-sm text-slate-500 mt-2">Tính năng đang phát triển...</p>
-              </div>
-            </CardContent>
-          </Card>
-        );
+        return <CombatSystemIntegration />;
       
 
       

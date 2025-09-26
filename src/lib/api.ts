@@ -89,6 +89,10 @@ export const getPlayerData = async () => {
         headers: { 'Authorization': `Bearer ${getToken()}` }
     });
     if (!response.ok) {
+        // Nếu là 404, có nghĩa là chưa tạo character, trả về null
+        if (response.status === 404) {
+            return null;
+        }
         const errorText = await response.text();
         throw new Error(errorText || 'Không thể lấy thông tin nhân vật');
     }
@@ -99,7 +103,10 @@ export const getPlayerData = async () => {
 
 // API lấy danh sách maps
 export const getMaps = async () => {
-    const response = await fetch(`${API_BASE_URL}/maps`, {
+    // Lấy playerId từ localStorage hoặc context
+    const playerId = localStorage.getItem('playerId') || '1'; // Fallback to 1 if not found
+    
+    const response = await fetch(`${API_BASE_URL}/map/available?playerId=${playerId}`, {
         headers: { 'Authorization': `Bearer ${getToken()}` }
     });
     if (!response.ok) throw new Error('Failed to fetch maps');
@@ -108,7 +115,7 @@ export const getMaps = async () => {
 
 // API lấy thông tin chi tiết map
 export const getMapDetails = async (mapId: number) => {
-    const response = await fetch(`${API_BASE_URL}/maps/${mapId}`, {
+    const response = await fetch(`${API_BASE_URL}/map/${mapId}`, {
         headers: { 'Authorization': `Bearer ${getToken()}` }
     });
     if (!response.ok) throw new Error('Failed to fetch map details');
@@ -117,13 +124,13 @@ export const getMapDetails = async (mapId: number) => {
 
 // API bắt đầu map run
 export const startMapRun = async (mapId: number, difficulty?: string) => {
-    const response = await fetch(`${API_BASE_URL}/maps/${mapId}/start`, {
+    const playerId = localStorage.getItem('playerId') || '1';
+    const response = await fetch(`${API_BASE_URL}/map/explore?playerId=${playerId}&mapId=${mapId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${getToken()}`
-        },
-        body: JSON.stringify({ difficulty })
+        }
     });
     if (!response.ok) throw new Error('Failed to start map run');
     return response.json();
@@ -131,13 +138,13 @@ export const startMapRun = async (mapId: number, difficulty?: string) => {
 
 // API di chuyển trong map
 export const moveInMap = async (runId: number, x: number, y: number) => {
-    const response = await fetch(`${API_BASE_URL}/maps/runs/${runId}/move`, {
+    const playerId = localStorage.getItem('playerId') || '1';
+    const response = await fetch(`${API_BASE_URL}/map/move?playerId=${playerId}&runId=${runId}&x=${x}&y=${y}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${getToken()}`
-        },
-        body: JSON.stringify({ x, y })
+        }
     });
     if (!response.ok) throw new Error('Failed to move in map');
     return response.json();

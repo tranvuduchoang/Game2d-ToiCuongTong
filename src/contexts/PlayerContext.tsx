@@ -30,6 +30,13 @@ export function PlayerProvider({ children }: PlayerProviderProps) {
       const data = await getPlayerData();
       console.log('Player data from API:', data);
       
+      // Nếu data là null, có nghĩa là chưa tạo character
+      if (data === null) {
+        setPlayerData(null);
+        setError(null);
+        return;
+      }
+      
       // Chuyển đổi dữ liệu từ backend thành format cho UI
       const statusData: PlayerStatusData = {
         playerName: data.name || "Chưa đặt tên",
@@ -43,6 +50,11 @@ export function PlayerProvider({ children }: PlayerProviderProps) {
         gold: data.gold || 0,
         reputation: data.reputation || 0
       };
+      
+      // Lưu playerId vào localStorage để sử dụng cho các API khác
+      if (data.id) {
+        localStorage.setItem('playerId', data.id.toString());
+      }
       
       setPlayerData(statusData);
       setError(null);
